@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="GBK">
+    <title>登录</title>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="resource/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resource/css/login.css">
+    <meta name="viewport" content="width=device-width,height=device-width, initial-scale=1,maximum-scale=1">
+</head>
+<body>
+<div class="section">
+    <div class="container">
+        <div class="row full-height justify-content-center">
+            <div class="col-12 text-center align-self-center py-5" style="position: relative;top: 50px">
+                <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                    <h6 class="mb-0 pb-3"><span>登 录 </span><span>注 册</span></h6>
+                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                    <label for="reg-log"></label>
+                    <div class="card-3d-wrap mx-auto">
+                        <div class="card-3d-wrapper">
+                            <div class="card-front">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3">登 录</h4>
+                                        <div class="form-group">
+                                            <input type="text" name="logID" class="form-style" placeholder="姓名" id="logemail" autocomplete="off">
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" name="logpass" class="form-style" placeholder="密码" id="logpass" autocomplete="off">
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <p onclick="login()" id="toUserIndex" class="btn mt-4">提交</p>
+                                        <p class="mb-0 mt-4 text-center">
+                                            <p id="login-tip" class="link" style="color: #ff4d4d;"></p>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-back">
+                                <div class="center-wrap">
+                                    <div class="section text-center">
+                                        <h4 class="mb-4 pb-3" style="margin: 0 0">注 册</h4>
+                                        <div class="form-group">
+                                            <input type="text" name="signname" class="form-style" placeholder="姓名" id="signName" autocomplete="off">
+                                            <i class="input-icon uil uil-user"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="number" name="logemail" class="form-style" placeholder="年龄" id="signAge" oninput="if (value>70)value=70" autocomplete="off">
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" name="logpass" class="form-style" placeholder="密码" id="signPass" oninput="if (value.length>20){value=value.slice(0,19);alert('最大长度20')}" autocomplete="off">
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="text" name="gender" class="form-style" placeholder="性别" id="signGender" autocomplete="off">
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <p onclick="signIn()" class="btn mt-4">提交</p>
+                                        <p id="signin-tip" class="link" style="color:#ff4d4d;"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+    if (self != top){
+
+        top.location = self.location; //防止被框架方式或者被框架后自动转向；破解原理，在父窗口中定义变量location替换系统定义的location
+                                     // 在主窗口的</head>前添加<script type="text/javascript">var location=document.location<>
+    }
+
+    let signName = $("#signName");
+    let signAge = $("#signAge");
+    let signPass = $("#signPass");
+    let signGender = $("#signGender");
+
+    function login() {
+        let empID = $("#logemail").val();
+        let password = $("#logpass").val();
+        $.post(
+           "./loginVerify" ,
+            {
+                "username": empID,
+                "password": password,
+            },
+            function (data) {
+                if (data.result == "success"){
+                    if (data.message == "admin"){
+                        window.location.href = "./onmanage/manageHeader.html";
+                    }else {
+                        window.location.href = "./onwork/employee.html?empID="+empID;
+                    }
+                }else {
+                    $("#login-tip").text("账号或密码错误");
+                }
+            },
+            "json"
+        )
+    }
+
+    function signIn() {
+        if (signName.val().trim()=='' || signAge.val().trim()=='' || signPass.val().trim()=='' || signGender.val().trim()==""){
+            alert("请将信息补充完整");
+            return;
+        }
+        if (signGender.val().trim()!='男' && signGender.val().trim()!='女'){
+            alert("无效性别");
+            return;
+        }
+
+        $.post(
+            "./signInServlet",
+            {
+                "name": signName.val().trim(),
+                "password": signPass.val().trim(),
+                "age": signAge.val().trim(),
+                "gender": signGender.val().trim(),
+            },
+            function (data) {
+                if (data.result == "success"){
+                    $("#signin-tip").text("注册请求已提交，请联系管理员及时审核");
+                }else {
+                    $("#signin-tip").text(data.message);
+                }
+            },
+            "json"
+        )
+    }
+
+
+</script>

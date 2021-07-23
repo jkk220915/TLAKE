@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游客统计</title>
+    <link href="resource/css/count.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width,height=device-width, initial-scale=1,maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+</head>
+<body onload="loadScenic()">
+<div class="toolBar">
+    <span class="toolBar-logo"><img src="resource/image/logo.png" class="logo" alt="logo"></span>
+    <span class="toolBar-scenicProjects">
+        <div class="scenicProjects">
+            <div class="toolBar-subMenu">项目位置</div>
+        </div>
+    </span>
+    <ul class="toolBar-subMenu">
+
+    </ul>
+    <span onclick="empLogout()" class="empLogout">退 出</span>
+</div>
+
+<div class="jumbotron">
+    <div class="employee" style="line-height: 48px">
+        <label class="adminTip" style="line-height: 48px">管理员未登录</label>
+    </div>
+    <div>
+        <label id="countAcc">今日客流量：</label>
+    </div>
+</div>
+
+<div class="inputDiv">
+    <input type="text" class="form-control" id="ticketInput" aria-describedby="basic-addon3" placeholder="扫码验票、登录"><br>
+    <span class="inputTip"></span>
+</div>
+</body>
+
+<script>
+    let employees = new Map();
+    let scenicGroup = new Map();
+    let isLogout = false;
+    let isWhere = '';
+    let QRCodeInput = $("#ticketInput");
+    let QRCodeTip = $(".inputTip");
+    let passengerTrafficTip = $("#countAcc");
+    setInterval("isEmployeesHere()",10000);
+
+    $("ul.toolBar-subMenu").on('click','li',function () {
+        let where = $(this).text();
+        isWhere = scenicGroup.get(where);
+        $("div.toolBar-subMenu").text(where);
+        passengerTrafficTip.text('今日客流量：');
+        isEmployeesHere();
+        QRCodeInput.val('');
+    });
+
+    QRCodeInput.keyup(function (event) {
+        QRCodeTip.text(' ');
+        if (event.keyCode===13){
+            if (isWhere===' '){
+                QRCodeTip.text('未选择项目位置！');
+                return
+            }
+            let inputData = $(this).val();
+            if (inputData.startsWith("tldj")){
+                scanEmployee();
+            }else {
+                if (employees.size==0){
+                    QRCodeTip.text('管理员未登录！');
+                    $(this).val('');
+                }else {
+                    scanTicket();
+                }
+            }
+        }
+    });
+    
+    function empLogout() {
+        QRCodeInput.val(' ');
+        if (isLogout){
+            isLogout = false;
+            QRCodeInput.attr('placeholder',"扫描验票、登录");
+            $("span.empLogout").text("退 出");
+        }else {
+            isLogout =true;
+            QRCodeInput.attr('placeholder',"扫描验票、退出");
+            $("span.empLogout").text("取消退出")
+        }
+    }
+    
+    function scanTicket() {
+        let emp= '';
+        for (let item of employees.keys()){
+            emp = emp + item + " ";
+        }
+        emp = emp.substr(0,emp.length-1);
+        $.post(
+            "./checkQR",
+            {
+                "ticketID": QRCodeInput.val(),
+                "scenicID": encodeURI(isWhere),
+                "employeeId": emp,
+            },
+            function (data) {
+                QRCodeInput.val(' ');
+                if (data.result == "success"){
+                    QRCodeTip.text("扫描完成");
+                    passengerTrafficTip.text('今日客流量：' + data.message)
+                }else {
+                    QRCodeTip.text("亲，扫一次就够了噢")
+                }
+            },
+            "json"
+        )
+    }
+    function scanEmployee() {
+        if (isLogout){
+           $.post(
+               "./employee",
+               {
+                   "doWhat": "logout",
+                   "scenicID": encodeURI(isWhere),
+                   "employeeId": QRCodeInput.val(),
+               },
+               function (data) {
+                    QRCodeTip.text(data.message)
+                   isEmployeesHere();
+               },
+               "json"
+           )
+        }else {
+            $.post(
+                "./employee",
+                {
+                    "doWhat": "login",
+                    "scenicID": encodeURI(isWhere),
+                    "employeeId": QRCodeInput.val(),
+                },
+                function (data) {
+                    QRCodeTip.text(data.message);
+                    if (!isLogout){
+                        if (data.result == "success"){
+                            let emp = data.message.split(" ");
+                            if (!employees.has(emp[0])){
+                                employees.set(emp[0],emp[1]);
+                            }
+                        }
+                        QRCodeInput.val(' ');
+                        updateEmp();
+                    }
+                },
+                "json"
+            )
+        }
+    }
+    function isEmployeesHere() {
+        if (isWhere === ''){
+            return;
+        }
+        $.get(
+            "./employee",
+            {
+                "doWhat":"checkin",
+                "scenicID": encodeURI(isWhere),
+            },
+            function (data) {
+                employees.clear();
+                for (let emp of data){
+                    employees.set(emp.employeeID,emp.name)
+                }
+                updateEmp();
+            },
+            "json"
+        )
+    }
+
+    function updateEmp() {
+        let emp = "";
+        if (employees.size==0){
+            emp = "管理员未登录";
+        }
+        for (let item of employees.values()){
+            emp = emp + item +"";
+        }
+        $("label.adminTip").text(emp);
+    }
+
+    function loadScenic() {
+        let me = $("ul.toolBar-subMenu");
+        $.get(
+            "./scenicServlet",
+            {},
+            function (data) {
+                let scenicGr = data.split(';');
+                for (let scenicX of scenicGr){
+                    if (scenicX != ""){
+                        let temp = scenicX.split(" ");
+                        scenicGroup.set(temp[0],temp[1]);
+                        me.append('<li class="toolBar-subMenu-item">' + temp[0] + '</li>')
+                    }
+                }
+            },
+            "text"
+        );
+        isEmployeesHere();
+    }
+
+
+
+
+</script>
+</html>

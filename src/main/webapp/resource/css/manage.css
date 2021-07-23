@@ -1,0 +1,68 @@
+body{
+    background: url("../image/bg.png");
+}
+
+
+div.search-condition{
+    padding: 30px 50px;
+}
+.makeReport,.employee{
+    padding-left: 14px;
+    line-height: 48px;
+    color: #fff;
+    z-index: 9999;
+}
+.toolBar{
+    box-shadow: 0 0 60px #333333;
+}
+
+div.navigator{
+    height: 50px;
+    line-height: 50px;
+}
+div.navigator-head{
+    height: 50px;
+    line-height: 30px;
+    margin-top: 20px;
+    padding: 15px 250px;
+}
+span.navigator-head-span{
+    font-size: 20px;
+    font-weight: bold;
+}
+input{
+    margin-right: 20px;
+    border: none;
+    border-radius: 4px;
+    height: 32px;
+    padding: 5px 20px;
+    font-family: Arial;
+
+}
+input.date-go{
+    margin-left: 20px;
+    height: 30px;
+    background-color: #ff4d4d;
+    color: white;
+}
+#tbTicket-div{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+thead{
+    background-color: deepskyblue;
+}
+label{
+    line-height: 32px;
+}
+ul{
+    display: none;
+    z-index: 9999;
+    position: relative;
+    background-color: #404040;
+    box-shadow: 3px 3px 5px #222222;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: 10px;
+}

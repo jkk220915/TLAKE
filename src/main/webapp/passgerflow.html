@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width,height=device-width, initial-scale=1,maximum-scale=1">
+    <title>天乐湖客流统计</title>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            font-family: 'Poppins', sans-serif;
+            background: url("./resource/image/dsc.jpg") no-repeat center center/cover;
+            margin: 0;
+        }
+        header{
+            padding: 15px 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9;
+        }
+        .header-wraper{
+             padding-left: 15px;
+             padding-right: 15px;
+         }
+        img{
+            vertical-align: middle;
+            border-style: none;
+            height: 42px;
+        }
+        .overlay{
+            background-color: rgba(132,96,246,0.8);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .text-white{
+            z-index: 999;
+            color: #fff ;
+            font-weight: 100;
+            font-size: 55px;
+            line-height: 1.2em;
+            letter-spacing:6px;
+        }
+        .banner{
+            text-align: center;
+            position: relative;
+            padding-top: 100px;
+            width: 100%;
+        }
+        div.flow-count {
+            display: block;
+            padding-top: 5%;
+            text-align: center;
+            margin: 0 .1em;
+            border-radius: 8px;
+            text-shadow: 2px 1px 3px #4e555b;
+        }
+        div.flow-count p{
+            z-index: 999;
+            color: #fff ;
+            font-weight: 100;
+            font-size: 45px;
+            line-height: 1.2em;
+        }
+        .menu{
+            height: 30px;
+            float: right;
+            padding-top: 6px;
+        }
+    </style>
+</head>
+<body onload="getPassgerFlow()">
+    <header>
+        <div class="header-wraper">
+            <img src="./resource/image/logo.png" class="logo">
+            <img src="./resource/image/menu.png" class="menu">
+        </div>
+    </header>
+
+    <div class="overlay"></div>
+    <div class="banner">
+        <h1 class="text-white">今日客流量</h1>
+        <div class="flow-count">
+            <p class="flow-count">0</p>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|iPad|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
+        $("body").css("background","url('./resource/image/dji.jpg') no-repeat center center/cover");
+        $(".banner").css("padding-top","40%")
+        $(".text-white").css("font-size","45px")
+        $(".logo").css("height","40px")
+        $(".menu").css("height","30px").css("padding-top","5px")
+    }
+    setInterval('getPassgerFlow()',3000);
+    function getPassgerFlow() {
+        $.post(
+            "../passengetFlowServlet",
+            {},
+            function (data) {
+                if (data.result=="success"){
+                    $("p.flow-count").text(data.message);
+                }
+            },
+            "json"
+        )
+    }
+</script>

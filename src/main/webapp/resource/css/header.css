@@ -1,0 +1,131 @@
+html{
+    width: 100%;
+}
+body{
+    width: 100%;
+}
+.toolBar{
+    background-color:#333 ;
+    font-family:'PingFang SC','SF Pro Display','Microsoft YaHei';
+    font-size: 16px;
+    line-height: 40px;
+    height: 48px;
+    padding: 0 18px;
+    cursor: default;
+    width: 100%;
+}
+ul.toolBar-subMenu{
+    display: none;
+    z-index: 9999;
+    position: relative;
+    background-color: #404040;
+    box-shadow: 3px 3px 5px #222222;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: 10px;
+}
+div.toolBar-subMenu{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+li.toolBar-subMenu-item-onColumn{
+    position: relative;
+    padding-left: 14px;
+    z-index: 9999;
+    display: block;
+    color: white;
+    width: 80px;
+    height: 40px;
+    font-size: 13px;
+    line-height: 40px;
+}
+a.toolBar-subMenu-item-onColumn{
+    color: white;
+}
+span.toolBar-list-report:hover ul.toolBar-subMenu-report{display: block;}
+span.toolBar-list-report:hover div.toolBar-subMenu-report{background-color: #404040}
+
+span.toolBar-list-scenic:hover ul.toolBar-subMenu-scenic{display: block;}
+span.toolBar-list-scenic:hover ul.toolBar-subMenu-scenic{display: block;}
+
+span.toolBar-list-emp:hover ul.toolBar-subMenu-emp{display: block;}
+span.toolBar-list-emp:hover div.toolBar-subMenu-emp{background-color: #404040}
+
+span.toolBar-list-ticket:hover ul.toolBar-subMenu-ticket{display: block;}
+span.toolBar-list-ticket:hover div.toolBar-subMenu-ticket{background-color: #404040}
+
+span.toolBar-list-report,span.toolBar-list-emp,span.toolBar-list-scenic,span.toolBar-list-ticket{
+    display: block;
+    float: left;
+    z-index: 9999;
+}
+.toolBar-subMenu-item{
+    position: relative;
+    padding-left: 14px;
+    z-index: 9999;
+    display: inline-block;
+    color: white;
+    width: 60px;
+    height: 40px;
+    font-size: 12px;
+    line-height: 40px;
+
+}
+.toolBar-subMenu-item:hover{background-color: #454545}
+span.toolBar-scenicProjects{
+    display: block;
+    float: left;
+    z-index: 9999;
+}
+.scenicProjects{
+    padding-left: 14px;
+    line-height: 48px;
+    color: #fff;
+    z-index: 9999;
+
+}
+li.adminTip{
+    display: inline-block;
+    line-height: 40px;
+    color: #fff;
+}
+div.empLogout{
+    width: 96px;
+    float: right;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #ff4d4d;
+    margin-top: 8px;
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+}
+.logo{    height:38px;    margin-top: 4px;    float: left;}
+.toolBar-logo{    float: left;    display: block;}
+.toolBar-Right{
+    box-sizing: content-box;
+    display: block;
+    float: right;
+}
+ul{
+    margin-top: 0;
+    padding:4px 10px ;
+    display: none;
+    z-index: 9999;
+    position: relative;
+    background-color: #404040;
+    box-shadow: 3px 3px 5px #222222;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.makeReport,.employee,.ticket{
+    padding-left: 20px;
+    padding-right: 20px;
+    line-height: 48px;
+    color: #fff;
+    z-index: 9999;
+}
+li:hover li{
+    background-color: #101010;
+}
+a:hover{color:#fff;}

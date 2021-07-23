@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-width,initial-scale=1,maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <title>游客评价</title>
+    <link href="../resource/css/tourist.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../resource/css/font-awesome.4.6.0.css">
+    <script src="../resource/js/jquery-2-1-3.min.js"></script>
+</head>
+<body onload="load()">
+<div class="ticketList">
+
+</div>
+    <div style="display: none">
+        <section id="bbb">
+            <HR>
+            <p class="time" style="font-weight: bold;color: #6c757d"></p>
+            <p class="emp"></p>
+            <div class="star_bg">
+                <div class="star_on">
+                    <input type="radio" name="score_1" class="score_1" onclick="refreshRemark(this)">
+                    <input type="radio" name="score_1" class="score_2" onclick="refreshRemark(this)">
+                    <input type="radio" name="score_1" class="score_3" onclick="refreshRemark(this)">
+                    <input type="radio" name="score_1" class="score_4" onclick="refreshRemark(this)">
+                    <input type="radio" name="score_1" class="score_5" onclick="refreshRemark(this)">
+                </div>
+            </div>
+            <input type="button" onclick="submitRemark(this)" value="打 分" name="0" class="submitButton"></br>
+        </section>
+    </div>
+</body>
+</html>
+<script>
+    let scenicImage = new Map();
+    let employees = new Map();
+    scenicImage.set("云霄飞车","001");
+    scenicImage.set("摩天轮","002");
+    let cav = $(".ticketList");
+    let ticketID = null;
+    let imgUrl = "../resource/image/1121.jpg";
+    function load() {
+        getTicketID();
+        $.get(
+            "../touristServlet",
+            {
+                "doWhat": "getBrief",
+                "ticketID": ticketID,
+            },
+            function (data) {
+                for (let record of data){
+                    if (scenicImage.has(record.scenicName)){
+                        imgUrl = "../resource/image/" + scenicImage.get(record.scenicName) + ".jpg";
+                    }
+                    cav.append(
+                        '<div class="ticket-dom" id='+ record.scenicName+ '>' +
+                            '<p class="ticket-item-text">'+ record.scenicName +
+                            '<div class="ticket-item" style="background-image: url(' + imgUrl + ')"></div>'+
+                        '</div>'
+                    )
+                }
+                loadRecord();
+            },
+            "json"
+        )
+    }
+
+    function loadRecord() {
+        $.get(
+            "../touristServlet",
+            {
+                "doWhat": "getSpecific",
+                "ticketID": ticketID,
+            },
+            function (data) {
+                for (let record of data){
+                    let thisDiv = $('#' +record.scenicName+'');
+                    let time = getMyDate(record.timeClock);
+                    thisDiv.append($('#bbb').clone().attr('id',record.timeClock));
+
+                    let thisSection = $('#'+record.timeClock+'');
+                    thisSection.find(".time").text(time);
+                    thisSection.find(".emp").text(record.name);
+                    employees.set(record.name,record.employees);
+                    if ((record.remark) != 0){
+                        waSai(thisSection,record.remark);
+                    }
+                    thisDiv.hover(
+                        function (){$(this).css("height",$(this).find("section").length*145+190+'px')},
+                        function (){$(this).css("height","140px");$(this).animate({scrollTop:0},10)}
+                    )
+                }
+            },
+            "json"
+        )
+    }
+
+    function getMyDate(str) {
+        let odate = new Date(parseInt(str)),
+            oYear = odate.getFullYear(),
+            oMonth = odate.getMonth()+1,
+            oDay = odate.getDate(),
+            oHour = odate.getHours(),
+            oMin = odate.getMinutes(),
+            oSen = odate.getSeconds(),
+            oTime = oYear + '-' +getZero(oMonth) + '-' +getZero(oDay) + ' ' + getZero(oHour)+ ":" + getZero(oMin)+ ":"+ getZero(oSen);
+        return oTime;
+    }
+
+    function getZero(num) {
+        if (parseInt(num)<10){
+            num = "0" + num;
+        }
+        return num;
+    }
+    function getTicketID() {
+        let url = location.href;
+        ticketID = url.substring(url.indexOf("?")+1,url.length).split("=")[1];
+    }
+    function refreshRemark(me) {
+        let index = $(me).index();
+        let sibling = $(me).parent(".star_bg").find(".star_on");
+        sibling.css("width",(index)*22+"px");
+        $(me).parent().parent().find(".submitButton").attr('name',index);
+    }
+    function waSai(me,index) {
+        let sibling = $(me).parent(".star_bg").find(".star_on");
+        sibling.css("width",(index)*22+"px");
+        $(me).find(".submitButton").prop('disabled',true).css("background-color","#999").css("color","#fff").val("已评价");
+        $(me).parent().find("input").attr("disabled","disabled");
+    }
+    function submitRemark(me) {
+        let empname = $(me).parent().find(".emp").text();
+        $.post(
+            "../touristServlet",
+            {
+                "doWhat": "remark",
+                "ticketID": ticketID,
+                "employees": employees.get(empname),
+                "time": $(me).parent().attr('id'),
+                "rremark": $(me).attr('name'),
+            },
+            function (data) {
+                if (data.result=="success"){
+                    $(me).attr("disabled","true").css("background-color","#999").css("color","#fff").val("已评价");
+                    $(me).parent().find("input").attr("disabled","disabled");
+                }
+            },
+            "json"
+        )
+    }
+</script>

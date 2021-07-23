@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        .demo{width: 400px; margin: 40px auto 0 auto; min-height: 250px;}
+        .demo p{line-height: 30px}
+        #code{margin-top: 10px}
+    </style>
+    <script src="../resource/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../resource/js/jquery.qrcode.min.js"></script>
+    <title>主页</title>
+    <meta name="viewport" content="width=device-width,height=device-width,initial-scale=1,maximum-scale=1">
+</head>
+<body>
+
+    <div id="header">
+        <img src="../resource/image/shortlogo.jpg" style="height: 48px;">
+    </div>
+    <div id="main" style="text-align: center">
+        <h2 class="top-title"></h2>
+        <div class="demo">
+            <h1>我的员工码</h1>
+            <div id="code"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let empID = location.search.split("=")[1];
+
+    $("#code").qrcode({
+        render: "table",
+        width: 200,
+        height: 200,
+        text: empID,
+    });
+    function toUtf8(str) {
+        let out,i,len,c;
+        out="";
+        len = str.length;
+        for (let j = 0; j < len; j++) {
+            c = str.charCodeAt(i);
+            if ((c >= 0x0001) && (c <= 0x007F)){
+                out += str.charAt(i);
+            }else if (c > 0x07FF){
+                out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                out += String.fromCharCode(0xE0 | ((c >> 6) & 0x3F));
+                out += String.fromCharCode(0xE0 | ((c >> 0) & 0x3F));
+            }else {
+                out += String.fromCharCode(0xE0 | ((c >> 6) & 0x1F));
+                out += String.fromCharCode(0xE0 | ((c >> 0) & 0x3F));
+            }
+        }
+        return out;
+    }
+</script>

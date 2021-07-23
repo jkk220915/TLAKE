@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-width,initial-scale=1,maximum-scale=1">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <title>天乐湖员工管理系统</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../resource/css/header.css" rel="stylesheet">
+    <script src="../resource/js/jquery-2-1-3.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../resource/js/jquery-latest.min.js"></script>
+    <script src="../resource/js/jquery.tablesorter.js"></script>
+    <script src="../resource/js/jquery.tablesorter.widgets.js"></script>
+    <script src="../resource/js/jquery.table2excel.js"></script>
+    <script src="../resource/js/myScript.js" charset="UTF-8"></script>
+
+</head>
+<body>
+    <div class="toolBar">
+        <span class="toolBar-logo"><img src="../resource/image/logo.png" class="logo" alt="logo"></span>
+        <span class="toolBar-list-report">
+            <div class="makeReport">
+                <div class="toolBar-subMenu">人员报表</div>
+                <ul class="toolBar-subMenu-report">
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./empdaily.html" target="myframe">单日报表</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./empdays.html" target="myframe">多日报表</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="empsingle.html" target="myframe">单人报表</a></li>
+                </ul>
+            </div>
+        </span>
+        <span class="toolBar-list-scenic">
+            <div class="makeReport">
+                <div class="toolBar-subMenu">景点报表</div>
+                <ul class="toolBar-subMenu-scenic">
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./scenicdaily.html" target="myframe">单日报表</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./scenicDays.html" target="myframe">多日报表</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./scenicsingle.html" target="myframe">单景点报表</a></li>
+                </ul>
+            </div>
+        </span>
+        <span class="toolBar-list-emp">
+            <div class="employee">
+                <div class="toolBar-subMenu">员工管理</div>
+                <ul class="toolBar-subMenu-emp">
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./onJobEmp.html" target="myframe">在职员工</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./addemp.html" target="myframe">入职离职</a></li>
+                </ul>
+            </div>
+        </span>
+        <span class="toolBar-list-ticket">
+            <div class="ticket">
+                <div class="toolBar-subMenu">票务数据</div>
+                <ul class="toolBar-subMenu-ticket">
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./onJobEmp.html" target="myframe">在职员工</a></li>
+                    <li class="toolBar-subMenu-item-onColumn"><a class="toolBar-subMenu-item-onColumn" href="./addemp.html" target="myframe">入职离职</a></li>
+                </ul>
+            </div>
+        </span>
+        <span class="toolBar-Right">
+            <ul class="employee">
+                <li class="adminTip">管理员未登录</li>
+            </ul>
+        </span>
+    </div>
+    <div style="height: 150px;background-color: cadetblue"></div>
+    <div style="width: 100%">
+        <iframe id="myiframe" name="myframe" src="empdaily.html" style="width: 100%;border: none">
+
+        </iframe>
+    </div>
+</body>
+</html>
+<script type="text/javascript" language="JavaScript">
+    function changeFrameHeight() {
+        let ifm = document.getElementById("myiframe");
+        ifm.height=document.documentElement.clientHeight-205;
+    }
+    window.onresize=function () {
+        changeFrameHeight();
+    }
+    $(function () {
+        changeFrameHeight();
+    })
+
+</script>
